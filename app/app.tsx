@@ -7,12 +7,22 @@ declare global {
 }
 
 import { h } from "../roc/deps.ts";
+import { AppHandler } from "../roc/router.ts";
 
-export function App() {
+function setState(state: unknown) {
+  //@ts-ignore
+  window.render(state);
+}
+
+export const App: AppHandler = ({ state }) => {
   return (
     <div>
-      <h1>Hello STututuff</h1>
-      <button onClick={() => console.log("helloouu")}>Here is a button</button>
+      <p>This is the value of the input: {state.input}</p>
+      <input
+        value={state.input}
+        onInput={(e: any) => setState({ ...state, input: e.target.value })}
+      />
+      <button onClick={() => console.log(`saving ${state.input}`)}>save</button>
     </div>
   );
-}
+};

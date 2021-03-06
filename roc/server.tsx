@@ -49,13 +49,17 @@ export async function serve(options: Deno.ListenOptions, router: Router) {
 
       const html = htm.bind(h);
 
+      const app = router[App];
+
+      const a = () => app({ state: { input: "stuff" } });
+
       const body = renderToString(html`
         <html>
           <head>
             <script src="/roc/client.js" type="module"></script>
           </head>
           <body>
-            <${router[App]} />
+            <${a} />
           </body>
         </html>
       `);

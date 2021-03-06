@@ -2,7 +2,9 @@ type Handler = (
   request: Record<string, unknown>
 ) => Promise<Record<string, unknown>>;
 
-type StringHandler = () => Promise<string>;
+export type AppHandler = (state: {
+  state: Record<string, any>;
+}) => Promise<any>;
 
 export type Method = "GET" | "POST";
 
@@ -17,11 +19,11 @@ export const App = Symbol();
 export interface Router {
   add: (method: Method, route: string, handler: Handler) => Router;
   notFound: (h: Handler) => Router;
-  app: (h: StringHandler) => Router;
+  app: (h: AppHandler) => Router;
   match: (method: Method, route: string) => Handler;
   routes: Map<RoutePath, Handler>;
   [NotFound]: Handler;
-  [App]: StringHandler;
+  [App]: AppHandler;
 }
 
 export function newRouter(): Router {
@@ -34,7 +36,7 @@ export function newRouter(): Router {
       router[NotFound] = handler;
       return router;
     },
-    app(handler: StringHandler) {
+    app(handler: AppHandler) {
       router[App] = handler;
       return router;
     },
